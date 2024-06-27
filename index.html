@@ -10,12 +10,33 @@
         body, html { height: 100%; margin: 0; }
         #mapid { width: 100%; height: 100%; }
         #search { position: absolute; left: 10px; top: 10px; z-index: 999; }
-        .myClusterIcon { background-color: #687394; color: #fff; border-radius: 50%; line-height: 40px; font-size: 16px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .myClusterIcon { background-color: #00ffae; color: #fff; border-radius: 50%; line-height: 40px; font-size: 16px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
         .leaflet-popup-close-button { display: none; }
+        .leaflet-tile { border: none !important; }
+        /* Loader styles */
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            margin: -25px 0 0 -25px;
+            border: 8px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 8px solid #3498db;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div id="mapid"></div>
+    <div id="loader"></div>
     <div id="search">
         <input list="cities" id="city-input" name="city-input" placeholder="Rechercher une ville">
         <datalist id="cities"></datalist>
@@ -55,6 +76,10 @@
 
         let citiesData;
 
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
         fetch('https://xvtn-t0vv-b4q1.n7d.xano.io/api:tPZOkDo1/villes_fran_aises')
             .then(response => response.json())
             .then(data => {
@@ -75,6 +100,7 @@
                     }
                 });
                 mymap.addLayer(markers);
+                hideLoader();
             });
 
         document.getElementById('city-input').addEventListener('keyup', function (e) {
