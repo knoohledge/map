@@ -11,37 +11,33 @@
         body, html {
             height: 100%;
             margin: 0;
+            display: flex;
+            position: relative;
         }
 
         #mapid {
             width: 100vw;
             height: 100vh;
+            position: relative;
         }
 
         #network-list {
-            width: 35%;
-            max-width: 500px;
-            height: 100vh;
             position: absolute;
-            left: 0;
             top: 0;
-            background: rgba(255, 255, 255, 1);
+            left: 0;
+            min-width: 280px;
+            max-width: 350px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0);
             border-left: 1px solid #ddd;
             z-index: 1000;
-            overflow: hidden; /* Hide any overflow from this container */
+            overflow-y: auto;
+            scrollbar-width: none;
+            padding: 20px 0px 0px 20px;
         }
 
-        #network-list-inner {
-            width: calc(100% + px); /* Adjust for scrollbar width */
-            height: 100%;
-            overflow-y: scroll; /* Enable internal scrolling */
-            padding: 20px; /* Adjust for potential scrollbar width */
-            box-sizing: content-box; /* Adjust for padding-right */
-        }
-
-        #network-list-inner::-webkit-scrollbar {
-            width: 0; /* Remove scrollbar for WebKit browsers */
-            display: none; /* Remove scrollbar for Firefox */
+        #network-list::-webkit-scrollbar {
+            display: none;
         }
 
         .myClusterIcon {
@@ -69,7 +65,7 @@
             margin-bottom: 15px;
             padding: 15px;
             border: 1px solid #CBD5E1;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             background: white;
             color: #334154;
@@ -107,8 +103,9 @@
         /* Loader styles */
         #loader {
             position: absolute;
-            left: 50%;
             top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 1000;
             width: 50px;
             height: 50px;
@@ -132,15 +129,17 @@
 </head>
 
 <body>
-    <div id="mapid"></div>
+    <div id="mapid">
+        <div id="loader"></div>
+    </div>
     <div id="network-list">
         <div id="network-list-inner"></div>
     </div>
-    <div id="loader"></div>
     <script>
         const mymap = L.map('mapid', {
             zoomControl: false
-        }).setView([46.603354, 1.888334], 6);
+        }).setView([46.603354, 1.888334], 5);
+        mymap.panBy([-150, 0], {animate: false});
         setTimeout(() => mymap.invalidateSize(), 100);
 
         L.control.zoom({
@@ -210,7 +209,7 @@
         fetch('https://xvtn-t0vv-b4q1.n7d.xano.io/api:tPZOkDo1/reseaux')
             .then(response => response.json())
             .then(data => {
-                const networkList = document.getElementById('network-list-inner');
+                const networkList = document.getElementById('network-list');
                 data.forEach(network => {
                     const networkItem = document.createElement('div');
                     networkItem.className = 'network-item';
